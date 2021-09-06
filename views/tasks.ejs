@@ -1,0 +1,141 @@
+<%- include("templates/header") %>
+<div class="container">
+  <h1>Tasks!</h1>
+
+  <form action="/tasks" method="POST">
+    <input
+        type="text"
+        placeholder="Add New Task"
+        class="form-control my-2"
+        name="text"
+        autofocus
+    >
+    <button class="btn btn-block btn-primary" type="submit">Add</button>
+  </form>
+    <table class="table" id="table">
+        <thead>
+          <tr>
+          </tr>
+        </thead>
+        <tbody>
+            <% if (tasksArray.length > 0) { %>
+                <% tasksArray.forEach(task => { %>
+                    <tr>
+                        <td>
+                          <% if (task.isDone) { %>
+                            <strike><%= task.text %></strike>
+                            <%} else { %>
+                              <%= task.text %>
+                            <% } %>                        
+                        </td>
+                        <td>
+                          <% if (task.isDone) { %>
+                            <i
+                              class="doneButton fas fa-undo"
+                              role="button"
+                              data-id=<%= task.id %>
+                              data-text="<%= task.text %>"
+                              data-isdone=<%= task.isDone %>
+                            >
+                            </i>
+                            <%} else { %>
+                              <i
+                                class="doneButton fas fa-check-circle text-success"
+                                role="button"
+                                data-id=<%= task.id %>
+                                data-text="<%= task.text %>"
+                                data-isdone=<%= task.isDone %>
+                              >
+                            </i>
+                            <% } %>
+                        </td>
+                        <td>
+                          <a
+                            href="tasks/<%=task.id %>"
+                            class="editButton btn btn-warning btn-sm"
+                          >
+                            Edit
+                        </a>
+                        </td>
+                        <td>
+                          <button
+                            class="deleteButton btn btn-danger btn-sm"
+                            data-id=<%= task.id %>
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                <% }) %>
+               <% } %>
+        </tbody>
+      </table>
+
+</div>
+<%- include("templates/footer") %>
+
+<script>
+  //delete buttons action
+  const btnsDelete = document.querySelectorAll('.deleteButton');
+  Array.prototype.forEach.call(btnsDelete, function addClickListener(btn) {
+    btn.addEventListener('click', async() =>{
+      try {
+        const data = await fetch(`/tasks/${btn.dataset.id}`,{method:'delete'})
+        const res = await data.json()
+
+        //if eliminated successfully, refresh page
+        if(res.state){
+          window.location.href = '/tasks'
+        }
+        else{
+          console.log(res)
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    });
+  });
+
+  //done buttons action
+  const btnsDone = document.querySelectorAll('.doneButton');
+  Array.prototype.forEach.call(btnsDone, function addClickListener(btn) {
+    btn.addEventListener('click', async(e) =>{
+      e.preventDefault()
+
+      //for some  javascript reason (probably the way dataset works)
+      //btn.dataset.isdone is always true from a boolean pov
+      //so this is necessary
+      var isDone = btn.dataset.isdone
+      if(isDone === "false"){
+        isDone = false
+      }
+
+      try {
+        const data = await fetch(`/tasks/${btn.dataset.id}`,
+        {
+          method:'put',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text:btn.dataset.text,
+            isDone:!isDone
+          })
+        })
+
+        const res = await data.json()
+        
+        //if done state changed successfully, refresh page
+        if(res.state){
+          window.location.href = '/tasks'
+        }
+        else{
+          console.log(res)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    })
+  })
+</script>

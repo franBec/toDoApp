@@ -1,0 +1,78 @@
+<%- include("templates/header") %>
+<div class="container">
+    <h1>Task Details!</h1>
+    <p>Here you can edit your task</p>
+    <form id="form" data-id=<%= task.id %>>
+        <input
+            type="text"
+            class="form-control my-2"
+            name="text"
+            value="<%= task.text %>"
+            id="textId"
+        >
+
+        The task is <br>
+        <input type="radio" id="notDone" name="doneRadio" value="notDone"
+        <% if (!task.isDone) { %>
+         checked = "checked"
+        <% } %>
+        >
+        <label for="notDone">Not Done</label>
+        <input type="radio" id="done" name="doneRadio" value="done"
+        <% if (task.isDone) { %>
+            checked = "checked"
+        <% } %>>
+        <label for="done">Done</label><br>
+
+        <button class="editButton btn btn-success btn-sm my-5">
+            Edit it!
+        </button>
+    </form>
+</div>
+<%- include("templates/footer") %>
+
+<script>
+    const form = document.querySelector('#form')
+    form.addEventListener('submit', async(e)=>{
+        e.preventDefault()
+        const text = document.querySelector('#textId').value
+        const rbs = document.querySelectorAll('input[name="doneRadio"]');
+        let isDone;
+            for (const rb of rbs) {
+            if (rb.checked) {
+                isDone = rb.value;
+                break;
+            }
+        }
+        
+        if(isDone === "done"){
+            isDone = true
+        }
+        else{
+            isDone = false
+        }
+
+        try {
+            const data = await fetch(`/tasks/${form.dataset.id}`,{
+                method: 'put',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({text, isDone})
+                
+            })
+
+            const res = await data.json()
+            if(res.state){
+                window.location.href = '/tasks'
+            }
+            else{
+                console.log(res)
+            }
+
+        } catch (error) {
+            console.log(error)    
+        }
+        
+    })
+
+
+</script>
