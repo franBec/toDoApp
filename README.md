@@ -1,7 +1,7 @@
 # toDoApp
 
 ## Running the app
-Right now you can use it online here: https://to-do-app-becvort.herokuapp.com/tasks
+Right now you can use it online here: https://to-do-app-becvort.herokuapp.com/
 Anyways, if you really need to run it on your localmachine, you'll need a .env document, that is not here uploaded for security reasons (user and password of the database). So you can:
 - create your own .env with your own database info, just gotta be careful about constant process.env.CONSTANT names, and the line
 ```
