@@ -1,7 +1,7 @@
 {
   "name": "toDoApp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Right now you can use it online here: https://to-do-app-becvort.herokuapp.com/\r Anyways, if you really need to run it on your localmachine, you'll need a .env document, that is not here uploaded for security reasons (user and password of the database). So you can:\r - create your own .env with your own database info, just gotta be careful about constant process.env.CONSTANT names, and the line\r ```\r const Task = mongoose.model('Task', taskSchema, 'tasks')\r ```\r in /models/Tasks.js will need to be replaced by\r ```\r const Task = mongoose.model('param1', param2, 'param3')\r ```\r where\r - param1 = the singular name of the collection your model is for\r - param2 = the schema, also defined in /models/Tasks.js\r - param3= SAME NAME that MongoDB is using for collection",
   "main": "index.js",
   "scripts": {
     "start": "node app",
@@ -11,10 +11,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "mongoose": "^6.0.4"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franBec/toDoApp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/franBec/toDoApp/issues"
+  },
+  "homepage": "https://github.com/franBec/toDoApp#readme"
 }
